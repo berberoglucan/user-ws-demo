@@ -40,4 +40,10 @@ public class User extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
+
+    @PrePersist
+    private void prePersistUser() {
+        this.emailVerificationStatus = false;
+        this.active = true;
+    }
 }

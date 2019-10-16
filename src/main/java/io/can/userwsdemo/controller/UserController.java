@@ -25,6 +25,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserRest> createUser(@RequestBody UserSignUpRequestModel userRequestModel) {
         UserDto userRequest = userRequestModel.toUserDto();
+        // UserDto userRequest = mapper.map(userRequestModel, UserDto.class); // alternative
         UserDto createdUser = userService.createUser(userRequest);
         return ResponseEntity.ok(mapper.map(createdUser, UserRest.class));
     }
