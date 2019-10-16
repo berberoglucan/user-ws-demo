@@ -2,8 +2,8 @@ package io.can.userwsdemo.enumeration;
 
 public enum RoleTypes {
 
-    USER("ROLE_USER"),
-    ADMIN("ROLE_ADMIN");
+    ADMIN("ROLE_ADMIN"),
+    USER("ROLE_USER");
 
     private String roleName;
 

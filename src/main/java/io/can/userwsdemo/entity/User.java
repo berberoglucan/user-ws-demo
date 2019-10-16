@@ -2,14 +2,17 @@ package io.can.userwsdemo.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Data
 @EqualsAndHashCode(callSuper = false, of = "userId")
+@ToString(exclude = {"roles"})
 public class User extends BaseEntity {
 
     private static final long serialVersionUID = 9177995945992385152L;
@@ -38,12 +41,23 @@ public class User extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default true")
     private Boolean active;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Role> roles;
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @PrePersist
     private void prePersistUser() {
         this.emailVerificationStatus = false;
         this.active = true;
+    }
+
+    /**
+     This method manage the user and role tables bidirectional relationship
+    */
+    public void setUsersRoles(Role role) {
+        getRoles().add(role);
+        role.getUsers().add(this);
     }
 }
