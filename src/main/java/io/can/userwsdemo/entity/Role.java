@@ -1,9 +1,6 @@
 package io.can.userwsdemo.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,9 +26,18 @@ public class Role implements Serializable {
 
     @ManyToMany(mappedBy = "roles")
     @EqualsAndHashCode.Exclude
+    @Setter(AccessLevel.NONE) // setUsers olusturulmayacak
     private Set<User> users = new HashSet<>();
 
     public Role(String roleName) {
         this.roleName = roleName;
+    }
+
+    /**
+     * This method manage the user and role tables bidirectional relationship via role entity
+     * */
+    public void setRoleUsers(User user) {
+        getUsers().add(user);
+        user.getRoles().add(this);
     }
 }

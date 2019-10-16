@@ -1,8 +1,6 @@
 package io.can.userwsdemo.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -45,6 +43,7 @@ public class User extends BaseEntity {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
+    @Setter(AccessLevel.NONE) // setter'i kapatmak icin
     private Set<Role> roles = new HashSet<>();
 
     @PrePersist
@@ -54,9 +53,9 @@ public class User extends BaseEntity {
     }
 
     /**
-     This method manage the user and role tables bidirectional relationship
+     This method manage the user and role tables bidirectional relationship via user entity
     */
-    public void setUsersRoles(Role role) {
+    public void setUserRoles(Role role) {
         getRoles().add(role);
         role.getUsers().add(this);
     }

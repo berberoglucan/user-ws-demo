@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         User user = mapper.map(userDto, User.class);
         user.setUserId(UUID.randomUUID().toString());
-
         // TODO: encrypted password kaldirilacak
         user.setEncryptedPassword("test");
 
@@ -39,10 +38,9 @@ public class UserServiceImpl implements UserService {
         if (userRole == null) {
             userRole = roleRepository.save(new Role(RoleTypes.USER.getRole()));
         }
-        user.setRoles(Collections.singleton(userRole));
+        user.setUserRoles(userRole);
 
         User savedUser = userRepository.save(user);
-
         return mapper.map(savedUser, UserDto.class);
     }
 }
