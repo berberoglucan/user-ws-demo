@@ -36,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
         // new sign-up user has ROLE_USER
         Role userRole = roleRepository.findRoleByRoleName(RoleTypes.USER.getRole());
+        if (userRole == null) {
+            userRole = roleRepository.save(new Role(RoleTypes.USER.getRole()));
+        }
         user.setRoles(Collections.singleton(userRole));
 
         User savedUser = userRepository.save(user);
