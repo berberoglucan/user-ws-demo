@@ -12,7 +12,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.transaction.Transactional;
-import java.util.UUID;
 
 
 @SpringBootApplication
@@ -44,7 +43,7 @@ public class UserWsDemoApplication implements CommandLineRunner {
         user1.setUserId(generateStringUtil.generateUserId());
         user1.setEmail("can@gmail.com");
         user1.setEncryptedPassword("123456");
-        user1.setUserRoles(adminRole);
+        user1.addUserRoles(adminRole);
 
         User user2 = new User();
         user2.setFirstName("cem");
@@ -52,7 +51,7 @@ public class UserWsDemoApplication implements CommandLineRunner {
         user2.setUserId(generateStringUtil.generateUserId());
         user2.setEmail("cem@gmail.com");
         user2.setEncryptedPassword("123456");
-        user2.setUserRoles(userRole);
+        user2.addUserRoles(userRole);
 
         userRepository.save(user1);
         userRepository.save(user2);

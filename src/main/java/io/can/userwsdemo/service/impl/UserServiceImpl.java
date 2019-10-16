@@ -12,7 +12,7 @@ import io.can.userwsdemo.util.ObjectModelMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
 @Service("userService")
@@ -24,29 +24,30 @@ public class UserServiceImpl implements UserService {
     private final GenerateStringUtil generateStringUtil;
 
     @Override
+    @Transactional
     public UserDto createUser(UserDto userDto) {
 
-        User user = userRepository.findUserByEmail(userDto.getEmail());
+        User existUser = userRepository.findUserByEmail(userDto.getEmail());
         // Throw exception if there are exists user with this email
         // TODO: Custom exception yaz
-        if (user != null) {
+        if (existUser != null) {
             throw new RuntimeException("User already exists");
         }
 
-        user = mapper.map(userDto, User.class);
-        user.setUserId(generateStringUtil.generateUserId());
+        User newUser = mapper.map(userDto, User.class);
+        newUser.setUserId(generateStringUtil.generateUserId());
 
         // TODO: encrypted password kaldirilacak
-        user.setEncryptedPassword("test");
+        newUser.setEncryptedPassword("test");
 
         // new sign-up user has ROLE_USER
         Role userRole = roleRepository.findRoleByRoleName(RoleTypes.USER.getRole());
         if (userRole == null) {
             userRole = roleRepository.save(new Role(RoleTypes.USER.getRole()));
         }
-        user.setUserRoles(userRole);
+        newUser.addUserRoles(userRole);
 
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(newUser);
         return mapper.map(savedUser, UserDto.class);
     }
 }

@@ -57,13 +57,13 @@ public class User extends BaseEntity {
     /**
      This method manage the user and role tables bidirectional relationship via user entity
     */
-    public void setUserRoles(Role role) {
+    public void addUserRoles(Role role) {
         getRoles().add(role);
         role.getUsers().add(this);
     }
 
     // TODO: TEST ET (Silinebilir)
-    public void setUserRoles(Collection<Role> roleCollection) {
+    public void addUserRoles(Collection<Role> roleCollection) {
         getRoles().addAll(roleCollection);
         for (Role role : roleCollection) {
             role.getUsers().add(this);

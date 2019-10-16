@@ -37,13 +37,13 @@ public class Role implements Serializable {
     /**
      * This method manage the user and role tables bidirectional relationship via role entity
      * */
-    public void setRoleUsers(User user) {
+    public void addRoleUsers(User user) {
         getUsers().add(user);
         user.getRoles().add(this);
     }
 
     // TODO: TEST ET (Silinebilir)
-    public void setRoleUsers(Collection<User> userCollection) {
+    public void addRoleUsers(Collection<User> userCollection) {
         getUsers().addAll(userCollection);
         for (User user : userCollection) {
             user.getRoles().add(this);
