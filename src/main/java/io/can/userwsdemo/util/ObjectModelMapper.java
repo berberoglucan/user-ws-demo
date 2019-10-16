@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@Component
+@Component("mapper")
 public class ObjectModelMapper {
 
     private final ModelMapper modelMapper;
@@ -19,7 +19,7 @@ public class ObjectModelMapper {
     }
 
     public <D, T> List<D> mapAll(Collection<T> sourceCollection, Class<D> destinationType) {
-        return sourceCollection.stream().map(entity -> map(entity, destinationType)).collect(Collectors.toList());
+        return sourceCollection.stream().map(source -> map(source, destinationType)).collect(Collectors.toList());
     }
 
 }

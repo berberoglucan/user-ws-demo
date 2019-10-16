@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService {
 
     private final ObjectModelMapper mapper;
