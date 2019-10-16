@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public class Role implements Serializable {
 
     @ManyToMany(mappedBy = "roles")
     @EqualsAndHashCode.Exclude
-    @Setter(AccessLevel.NONE) // setUsers olusturulmayacak
+    @Setter(AccessLevel.NONE) // not define setter for users
     private Set<User> users = new HashSet<>();
 
     public Role(String roleName) {
@@ -39,5 +40,13 @@ public class Role implements Serializable {
     public void setRoleUsers(User user) {
         getUsers().add(user);
         user.getRoles().add(this);
+    }
+
+    // TODO: TEST ET (Silinebilir)
+    public void setRoleUsers(Collection<User> userCollection) {
+        getUsers().addAll(userCollection);
+        for (User user : userCollection) {
+            user.getRoles().add(this);
+        }
     }
 }

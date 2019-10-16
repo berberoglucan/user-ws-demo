@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserSignUpRequestModel {
-
+    // TODO: Validation ekle
     private String firstName;
     private String lastName;
     private String email;

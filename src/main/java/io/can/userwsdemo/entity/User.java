@@ -3,7 +3,9 @@ package io.can.userwsdemo.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -43,7 +45,7 @@ public class User extends BaseEntity {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
-    @Setter(AccessLevel.NONE) // setter'i kapatmak icin
+    @Setter(AccessLevel.NONE) // not define setter for roles
     private Set<Role> roles = new HashSet<>();
 
     @PrePersist
@@ -59,4 +61,13 @@ public class User extends BaseEntity {
         getRoles().add(role);
         role.getUsers().add(this);
     }
+
+    // TODO: TEST ET (Silinebilir)
+    public void setUserRoles(Collection<Role> roleCollection) {
+        getRoles().addAll(roleCollection);
+        for (Role role : roleCollection) {
+            role.getUsers().add(this);
+        }
+    }
+
 }

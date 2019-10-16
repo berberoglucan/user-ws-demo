@@ -7,15 +7,11 @@ import io.can.userwsdemo.repository.RoleRepository;
 import io.can.userwsdemo.repository.UserRepository;
 import io.can.userwsdemo.service.UserService;
 import io.can.userwsdemo.dto.UserDto;
+import io.can.userwsdemo.util.GenerateStringUtil;
 import io.can.userwsdemo.util.ObjectModelMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -25,11 +21,21 @@ public class UserServiceImpl implements UserService {
     private final ObjectModelMapper mapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final GenerateStringUtil generateStringUtil;
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = mapper.map(userDto, User.class);
-        user.setUserId(UUID.randomUUID().toString());
+
+        User user = userRepository.findUserByEmail(userDto.getEmail());
+        // Throw exception if there are exists user with this email
+        // TODO: Custom exception yaz
+        if (user != null) {
+            throw new RuntimeException("User already exists");
+        }
+
+        user = mapper.map(userDto, User.class);
+        user.setUserId(generateStringUtil.generateUserId());
+
         // TODO: encrypted password kaldirilacak
         user.setEncryptedPassword("test");
 

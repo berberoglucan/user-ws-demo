@@ -5,6 +5,7 @@ import io.can.userwsdemo.entity.User;
 import io.can.userwsdemo.enumeration.RoleTypes;
 import io.can.userwsdemo.repository.RoleRepository;
 import io.can.userwsdemo.repository.UserRepository;
+import io.can.userwsdemo.util.GenerateStringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,9 @@ public class UserWsDemoApplication implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private GenerateStringUtil generateStringUtil;
+
     public static void main(String[] args) {
         SpringApplication.run(UserWsDemoApplication.class, args);
     }
@@ -37,7 +41,7 @@ public class UserWsDemoApplication implements CommandLineRunner {
         User user1 = new User();
         user1.setFirstName("can");
         user1.setLastName("berberoglu");
-        user1.setUserId(UUID.randomUUID().toString());
+        user1.setUserId(generateStringUtil.generateUserId());
         user1.setEmail("can@gmail.com");
         user1.setEncryptedPassword("123456");
         user1.setUserRoles(adminRole);
@@ -45,7 +49,7 @@ public class UserWsDemoApplication implements CommandLineRunner {
         User user2 = new User();
         user2.setFirstName("cem");
         user2.setLastName("berberoglu");
-        user2.setUserId(UUID.randomUUID().toString());
+        user2.setUserId(generateStringUtil.generateUserId());
         user2.setEmail("cem@gmail.com");
         user2.setEncryptedPassword("123456");
         user2.setUserRoles(userRole);
