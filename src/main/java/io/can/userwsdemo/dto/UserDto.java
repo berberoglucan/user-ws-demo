@@ -3,11 +3,13 @@ package io.can.userwsdemo.dto;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class UserDto implements Serializable {
 
@@ -22,4 +24,7 @@ public class UserDto implements Serializable {
     private String encryptedPassword;
     private String emailVerificationToken;
     private Boolean emailVerificationStatus;
+    private Boolean active;
+    private List<RoleDto> roles;
+
 }

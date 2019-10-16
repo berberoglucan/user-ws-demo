@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService {
 
     private final ObjectModelMapper mapper;
 
-    private final UserRepository userRepository;
+    //private final UserRepository userRepository;
 
     @Override
     public UserDto createUser(UserDto userDto) {
