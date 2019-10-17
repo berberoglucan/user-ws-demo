@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,6 +40,9 @@ public class User extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default true")
     private Boolean active;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean locked;
+
     @ManyToMany
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
@@ -52,6 +54,7 @@ public class User extends BaseEntity {
     private void prePersistUser() {
         this.emailVerificationStatus = false;
         this.active = true;
+        this.locked = false;
     }
 
     /**

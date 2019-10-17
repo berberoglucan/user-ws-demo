@@ -1,20 +1,22 @@
 package io.can.userwsdemo.service.impl;
 
+import io.can.userwsdemo.dto.UserDto;
 import io.can.userwsdemo.entity.Role;
 import io.can.userwsdemo.entity.User;
 import io.can.userwsdemo.enumeration.RoleTypes;
 import io.can.userwsdemo.repository.RoleRepository;
 import io.can.userwsdemo.repository.UserRepository;
 import io.can.userwsdemo.service.UserService;
-import io.can.userwsdemo.dto.UserDto;
 import io.can.userwsdemo.util.GenerateStringUtil;
 import io.can.userwsdemo.util.ObjectModelMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+
 
 @RequiredArgsConstructor
 @Service("userService")
@@ -50,5 +52,40 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(newUser);
         return mapper.map(savedUser, UserDto.class);
+    }
+
+    /**
+     * This method calls by spring security
+     * */
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        User foundUser = userRepository.findUserByEmail(email);
+
+        if (foundUser == null) {
+            throw new UsernameNotFoundException("No registered user with this email : " + email);
+        }
+
+        // alternative 1 -> no need to write "ROLE_" prefix, because roles method put the "ROLE_" prefix
+        String[] roles = foundUser.getRoles().stream()
+                .map(Role::getRoleName)
+                .toArray(String[]::new);
+
+        // alternative 2 -> need to write "ROLE_" prefix, because type must be converted to GrantedAuthority collection and authorities method not put the "ROLE_" prefix
+
+        /* List<GrantedAuthority> authorities = foundUser.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
+                .collect(Collectors.toList()); */
+
+        return org.springframework.security.core.userdetails.User.
+                withUsername(foundUser.getEmail())
+                .password(foundUser.getEncryptedPassword())
+                .disabled(!foundUser.getActive())
+                .accountLocked(foundUser.getLocked())
+                .roles(roles)
+                //.authorities(authorities)
+                .build();
+
     }
 }

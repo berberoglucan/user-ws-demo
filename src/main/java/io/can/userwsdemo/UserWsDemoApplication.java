@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.transaction.Transactional;
 
@@ -25,6 +26,9 @@ public class UserWsDemoApplication implements CommandLineRunner {
 
     @Autowired
     private GenerateStringUtil generateStringUtil;
+
+    @Autowired
+    private PasswordEncoder bCryptPasswordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(UserWsDemoApplication.class, args);
@@ -42,7 +46,7 @@ public class UserWsDemoApplication implements CommandLineRunner {
         user1.setLastName("berberoglu");
         user1.setUserId(generateStringUtil.generateUserId());
         user1.setEmail("can@gmail.com");
-        user1.setEncryptedPassword("123456");
+        user1.setEncryptedPassword(bCryptPasswordEncoder.encode("123456"));
         user1.addUserRoles(adminRole);
 
         User user2 = new User();
@@ -50,7 +54,7 @@ public class UserWsDemoApplication implements CommandLineRunner {
         user2.setLastName("berberoglu");
         user2.setUserId(generateStringUtil.generateUserId());
         user2.setEmail("cem@gmail.com");
-        user2.setEncryptedPassword("123456");
+        user2.setEncryptedPassword(bCryptPasswordEncoder.encode("123456"));
         user2.addUserRoles(userRole);
 
         userRepository.save(user1);

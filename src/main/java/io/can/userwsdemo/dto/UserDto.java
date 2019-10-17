@@ -3,6 +3,7 @@ package io.can.userwsdemo.dto;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -25,6 +26,9 @@ public class UserDto implements Serializable {
     private String emailVerificationToken;
     private Boolean emailVerificationStatus;
     private Boolean active;
+    private Boolean locked;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private List<RoleDto> roles;
 
 }
