@@ -10,6 +10,8 @@ import io.can.userwsdemo.dto.UserDto;
 import io.can.userwsdemo.util.GenerateStringUtil;
 import io.can.userwsdemo.util.ObjectModelMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final GenerateStringUtil generateStringUtil;
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     @Override
     @Transactional
@@ -36,9 +39,7 @@ public class UserServiceImpl implements UserService {
 
         User newUser = mapper.map(userDto, User.class);
         newUser.setUserId(generateStringUtil.generateUserId());
-
-        // TODO: encrypted password kaldirilacak
-        newUser.setEncryptedPassword("test");
+        newUser.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         // new sign-up user has ROLE_USER
         Role userRole = roleRepository.findRoleByRoleName(RoleTypes.USER.getRole());
