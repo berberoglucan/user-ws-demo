@@ -1,12 +1,8 @@
 package io.can.userwsdemo.controller;
 
 import io.can.userwsdemo.service.UserService;
-import io.can.userwsdemo.dto.UserDto;
-import io.can.userwsdemo.ui.request.UserSignUpRequestModel;
-import io.can.userwsdemo.ui.response.UserRest;
-import io.can.userwsdemo.util.ObjectModelMapper;
+import io.can.userwsdemo.mapper.ObjectModelMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -20,14 +16,6 @@ public class UserController {
     @GetMapping
     public String getUser() {
         return "get user was called";
-    }
-
-    @PostMapping
-    public ResponseEntity<UserRest> createUser(@RequestBody UserSignUpRequestModel userRequestModel) {
-        UserDto userRequest = userRequestModel.toUserDto();
-        // UserDto userRequest = mapper.map(userRequestModel, UserDto.class); // alternative
-        UserDto createdUser = userService.createUser(userRequest);
-        return ResponseEntity.ok(mapper.map(createdUser, UserRest.class));
     }
 
     @PutMapping

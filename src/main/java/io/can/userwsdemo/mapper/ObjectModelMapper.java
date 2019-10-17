@@ -1,4 +1,4 @@
-package io.can.userwsdemo.util;
+package io.can.userwsdemo.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

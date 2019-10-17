@@ -1,5 +1,6 @@
 package io.can.userwsdemo.util;
 
+import io.can.userwsdemo.ProjectConstants;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -20,7 +21,7 @@ public class GenerateStringUtil {
      * This method generates random user id for user entity
      * */
     public String generateUserId() {
-        return generateRandomString(Constants.LENGTH_FOR_USER_ID);
+        return generateRandomString(ProjectConstants.LENGTH_FOR_USER_ID);
     }
 
     private String generateRandomString(int length) {

@@ -8,7 +8,7 @@ import io.can.userwsdemo.repository.RoleRepository;
 import io.can.userwsdemo.repository.UserRepository;
 import io.can.userwsdemo.service.UserService;
 import io.can.userwsdemo.util.GenerateStringUtil;
-import io.can.userwsdemo.util.ObjectModelMapper;
+import io.can.userwsdemo.mapper.ObjectModelMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
      * */
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
 
         User foundUser = userRepository.findUserByEmail(email);
 

@@ -1,5 +1,6 @@
 package io.can.userwsdemo.config;
 
+import io.can.userwsdemo.ProjectConstants;
 import io.can.userwsdemo.enumeration.RoleTypes;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         // TODO: formLogin() kaldiralacak. Sadece test icin eklendi
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/user").permitAll()
+                .antMatchers(HttpMethod.POST, ProjectConstants.SIGN_UP_ENDPOINT).permitAll()
                 //.antMatchers("/login").permitAll()
                 //.antMatchers("/user").hasAnyRole(RoleTypes.USER.getRole(), RoleTypes.ADMIN.getRole())
                 .anyRequest().hasAnyRole(RoleTypes.USER.getRole(), RoleTypes.ADMIN.getRole())
