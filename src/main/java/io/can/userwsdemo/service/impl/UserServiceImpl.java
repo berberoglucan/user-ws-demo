@@ -54,6 +54,19 @@ public class UserServiceImpl implements UserService {
         return mapper.map(savedUser, UserDto.class);
     }
 
+    @Override
+    @Transactional
+    public UserDto getUserWithEmail(String email) {
+
+        User existUser = userRepository.findUserByEmail(email);
+
+        // TODO: Custom exception yaz
+        if (existUser == null) {
+            throw new RuntimeException("User is not found at given email : " + email);
+        }
+        return mapper.map(existUser, UserDto.class);
+    }
+
     /**
      * This method calls by spring security
      * */

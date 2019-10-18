@@ -2,6 +2,8 @@ package io.can.userwsdemo.config;
 
 import io.can.userwsdemo.ProjectConstants;
 import io.can.userwsdemo.enumeration.RoleTypes;
+import io.can.userwsdemo.security.JwtAuthenticationFilter;
+import io.can.userwsdemo.service.UserService;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,11 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userService;
+    private final UserService userService;
     private final PasswordEncoder bCryptPasswordEncoder;
 
     // constructor injection
-    public WebSecurityConfig(UserDetailsService userService, PasswordEncoder bCryptPasswordEncoder) {
+    public WebSecurityConfig(UserService userService, PasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -29,13 +31,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        // TODO: formLogin() kaldiralacak. Sadece test icin eklendi
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, ProjectConstants.SIGN_UP_ENDPOINT).permitAll()
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, ProjectConstants.SIGN_UP_ENDPOINT, ProjectConstants.LOGIN_ENDPOINT).permitAll()
                 //.antMatchers("/login").permitAll()
                 //.antMatchers("/user").hasAnyRole(RoleTypes.USER.getRole(), RoleTypes.ADMIN.getRole())
                 .anyRequest().hasAnyRole(RoleTypes.USER.getRole(), RoleTypes.ADMIN.getRole())
-                .and().formLogin();
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService));
     }
 }
