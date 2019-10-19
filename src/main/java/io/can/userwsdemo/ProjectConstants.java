@@ -15,7 +15,6 @@ public class ProjectConstants {
 
     // Response header name constants
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
-    public static final String USER_ID_HEADER_NAME = "userId";
 
     private ProjectConstants() {}
 }

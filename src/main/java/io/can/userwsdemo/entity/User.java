@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean locked;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))

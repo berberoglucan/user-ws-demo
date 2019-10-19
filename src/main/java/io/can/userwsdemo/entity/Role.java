@@ -25,7 +25,7 @@ public class Role implements Serializable {
     @Column(nullable = false, unique = true)
     private String roleName;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @Setter(AccessLevel.NONE) // not define setter for users
     private Set<User> users = new HashSet<>();

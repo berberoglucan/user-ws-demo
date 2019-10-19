@@ -6,6 +6,7 @@ import io.can.userwsdemo.entity.User;
 import io.can.userwsdemo.enumeration.RoleTypes;
 import io.can.userwsdemo.repository.RoleRepository;
 import io.can.userwsdemo.repository.UserRepository;
+import io.can.userwsdemo.security.UserPrincipal;
 import io.can.userwsdemo.service.UserService;
 import io.can.userwsdemo.util.GenerateStringUtil;
 import io.can.userwsdemo.mapper.ObjectModelMapper;
@@ -57,13 +58,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto getUserWithEmail(String email) {
+        return (UserDto) this.getUserDtoOrUserByEmail(email, true);
+    }
+
+    @Override
+    public Object getUserDtoOrUserByEmail(String email, boolean isUserDto) {
 
         User existUser = userRepository.findUserByEmail(email);
-
         // TODO: Custom exception yaz
         if (existUser == null) {
             throw new RuntimeException("User is not found at given email : " + email);
         }
+        if (!isUserDto) {
+            return existUser;
+        }
+
         return mapper.map(existUser, UserDto.class);
     }
 
@@ -80,25 +89,6 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("No registered user with this email : " + email);
         }
 
-        // alternative 1 -> no need to write "ROLE_" prefix, because roles method put the "ROLE_" prefix
-        String[] roles = foundUser.getRoles().stream()
-                .map(Role::getRoleName)
-                .toArray(String[]::new);
-
-        // alternative 2 -> need to write "ROLE_" prefix, because type must be converted to GrantedAuthority collection and authorities method not put the "ROLE_" prefix
-
-        /* List<GrantedAuthority> authorities = foundUser.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
-                .collect(Collectors.toList()); */
-
-        return org.springframework.security.core.userdetails.User.
-                withUsername(foundUser.getEmail())
-                .password(foundUser.getEncryptedPassword())
-                .disabled(!foundUser.getActive())
-                .accountLocked(foundUser.getLocked())
-                .roles(roles)
-                //.authorities(authorities)
-                .build();
-
+        return new UserPrincipal(foundUser);
     }
 }
