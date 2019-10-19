@@ -65,7 +65,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
-        // TODO: auth basarisiz durumunda yapilacak alternatif bak
         System.out.println(failed.getMessage());
         super.unsuccessfulAuthentication(request, response, failed);
     }

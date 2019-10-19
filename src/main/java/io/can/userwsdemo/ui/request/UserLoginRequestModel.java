@@ -3,6 +3,8 @@ package io.can.userwsdemo.ui.request;
 import io.can.userwsdemo.dto.UserDto;
 import lombok.*;
 
+import javax.validation.constraints.Email;
+
 @Getter
 @Setter
 @ToString
