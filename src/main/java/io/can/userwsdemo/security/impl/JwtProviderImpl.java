@@ -1,10 +1,10 @@
 package io.can.userwsdemo.security.impl;
 
 import io.can.userwsdemo.ProjectConstants;
+import io.can.userwsdemo.config.AppProperties;
 import io.can.userwsdemo.enumeration.JwtClaimKey;
 import io.can.userwsdemo.security.JwtProvider;
 import io.can.userwsdemo.security.UserPrincipal;
-import io.can.userwsdemo.service.UserService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -21,7 +21,8 @@ import java.util.Map;
 @Component("jwtProvider")
 public class JwtProviderImpl implements JwtProvider {
 
-    private final UserService userService;
+    // custom application properties config file
+    private final AppProperties appProperties;
 
     /**
      * This method generate new jwt token with authenticated user information
@@ -31,7 +32,7 @@ public class JwtProviderImpl implements JwtProvider {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date(System.currentTimeMillis());
-        Date expirationTime = new Date(now.getTime() + ProjectConstants.EXPIRATION_TIME);
+        Date expirationTime = new Date(now.getTime() + appProperties.getJwt().getTokenExpirationTime());
 
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimKey.USER_ID.getClaimKey(), userPrincipal.getUserId());
@@ -42,7 +43,7 @@ public class JwtProviderImpl implements JwtProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expirationTime)
-                .signWith(SignatureAlgorithm.HS512, ProjectConstants.TOKEN_SECRET)
+                .signWith(SignatureAlgorithm.HS512, appProperties.getJwt().getTokenSecretKey())
                 .compact();
     }
 
@@ -81,10 +82,10 @@ public class JwtProviderImpl implements JwtProvider {
      *  Also this method validate the token
      * */
     private Jws<Claims> getParserForJWT(String token) {
-        Jws<Claims> parser = null;
+        Jws<Claims> parser;
         try {
             parser = Jwts.parser()
-                    .setSigningKey(ProjectConstants.TOKEN_SECRET)
+                    .setSigningKey(appProperties.getJwt().getTokenSecretKey())
                     .parseClaimsJws(token);
             return parser;
         } catch (SignatureException | MalformedJwtException
