@@ -2,21 +2,18 @@ package io.can.userwsdemo.controller.user;
 
 import io.can.userwsdemo.ProjectConstants;
 import io.can.userwsdemo.security.JwtProvider;
-import io.can.userwsdemo.service.UserService;
 import io.can.userwsdemo.ui.request.UserLoginRequestModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +21,7 @@ import java.util.ArrayList;
  * */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/login")
+@RequestMapping(ProjectConstants.LOGIN_ENDPOINT)
 public class LoginController {
 
     private final AuthenticationManager authenticationManager;

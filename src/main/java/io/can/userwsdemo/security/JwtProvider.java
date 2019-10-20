@@ -1,43 +1,37 @@
 package io.can.userwsdemo.security;
 
-import io.can.userwsdemo.ProjectConstants;
 import io.can.userwsdemo.enumeration.JwtClaimKey;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
-@Component("jwtProvider")
-public class JwtProvider {
-
+public interface JwtProvider {
 
     /**
      * This method generate new jwt token with authenticated user information
-     * */
-    public String generateToken(Authentication authentication) {
+     */
+    String generateToken(Authentication authentication);
 
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+    /**
+     * This method resolves jwt token from request header
+     * If request Auhorization header not includes the Bearer, this method returns null
+     */
+    String resolveToken(HttpServletRequest request);
 
-        Date now = new Date(System.currentTimeMillis());
-        Date expirationTime = new Date(now.getTime() + ProjectConstants.EXPIRATION_TIME);
+    /**
+     * This method give specific claim from JWT with JwtClaimKey type
+     */
+    Object getSpecificClaimFromJWT(String token, JwtClaimKey claimKey);
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimKey.USER_ID.getClaimKey(), userPrincipal.getUserId());
-        claims.put(JwtClaimKey.USER_EMAIL.getClaimKey(), userPrincipal.getUsername());
-        claims.put(JwtClaimKey.USER_AUTHORITIES.getClaimKey(), userPrincipal.getAuthorities());
+    /**
+     * This method give user id from JWT
+     */
+    String getUserIdFromJWT(String token);
 
-        return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expirationTime)
-                .signWith(SignatureAlgorithm.HS512, ProjectConstants.TOKEN_SECRET)
-                .compact();
-    }
-
+    /**
+     * This method validate token as token is expired and match user email from database
+     */
+    boolean isTokenValid(String token, UserDetails userDetails);
 
 }

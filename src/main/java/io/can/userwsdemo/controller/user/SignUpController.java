@@ -1,5 +1,6 @@
 package io.can.userwsdemo.controller.user;
 
+import io.can.userwsdemo.ProjectConstants;
 import io.can.userwsdemo.dto.UserDto;
 import io.can.userwsdemo.service.UserService;
 import io.can.userwsdemo.ui.request.UserSignUpRequestModel;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/sign-up")
+@RequestMapping(ProjectConstants.SIGN_UP_ENDPOINT)
 public class SignUpController {
 
     private final UserService userService;

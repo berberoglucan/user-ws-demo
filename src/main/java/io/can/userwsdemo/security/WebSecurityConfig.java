@@ -1,10 +1,7 @@
-package io.can.userwsdemo.config;
+package io.can.userwsdemo.security;
 
 import io.can.userwsdemo.ProjectConstants;
 import io.can.userwsdemo.enumeration.RoleTypes;
-import io.can.userwsdemo.security.JwtAuthenticationFilter;
-import io.can.userwsdemo.security.JwtAuthorizationFilter;
-import io.can.userwsdemo.security.JwtProvider;
 import io.can.userwsdemo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +12,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -38,7 +37,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().hasAnyRole(RoleTypes.USER.getRole(), RoleTypes.ADMIN.getRole())
                 .and()
                 //.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider))  // -> spring security default login endpoint filter
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userService));
+                .addFilterBefore(new JwtAuthorizationFilter(userService, jwtProvider), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
     }
 
     // required for inject the authentication manager
