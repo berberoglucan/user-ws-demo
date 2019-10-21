@@ -30,6 +30,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
+        logger.debug("Request uri: " + request.getRequestURI());
         String token = jwtProvider.resolveToken(request);
 
         if (StringUtils.hasText(token)) {
@@ -52,15 +53,21 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             // logic 2
             String email = null;
+
             try {
                 email = (String) jwtProvider.getSpecificClaimFromJWT(token, JwtClaimKey.USER_EMAIL);
+                logger.debug("Token username value: " + email);
             } catch (JwtException ex) {
                 logger.error("Exception with this token: " + token + " Exception is ->" + ex.getMessage());
             }
 
             if (StringUtils.hasText(email)) {
+
                 UserDetails userDetails = userService.loadUserByUsername(email);
+                logger.debug("User is : " + userDetails.getUsername());
+
                 if (jwtProvider.isTokenValid(token, userDetails)) {
+                    logger.debug(userDetails.getUsername() + "'s token is valid");
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
 
@@ -68,6 +75,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
+
+                logger.debug(userDetails.getUsername() + "'s token is not valid");
             }
         }
         chain.doFilter(request,response);
