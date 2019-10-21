@@ -7,6 +7,7 @@ import io.can.userwsdemo.ui.request.UserSignUpRequestModel;
 import io.can.userwsdemo.ui.response.UserRest;
 import io.can.userwsdemo.mapper.ObjectModelMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,8 @@ public class SignUpController {
 
     private final ObjectModelMapper mapper;
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserRest> signUp(@RequestBody UserSignUpRequestModel userSignUpRequestModel) {
         UserDto userRequest = userSignUpRequestModel.toUserDto();
         // UserDto userRequest = mapper.map(userRequestModel, UserDto.class); // alternative

@@ -4,6 +4,7 @@ import io.can.userwsdemo.ProjectConstants;
 import io.can.userwsdemo.security.JwtProvider;
 import io.can.userwsdemo.ui.request.UserLoginRequestModel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -27,7 +29,8 @@ public class LoginController {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public void login(@RequestBody UserLoginRequestModel loginRequestModel,
                         HttpServletResponse response) {
 
@@ -45,6 +48,8 @@ public class LoginController {
 
         // get authenticated user's principal and create jwt
         String token = jwtProvider.generateToken(authenticate);
+
+        // TODO: geriye status veya token json olarak donulebilir
 
         // add token in response header
         response.setHeader(ProjectConstants.AUTHORIZATION_HEADER_NAME, ProjectConstants.TOKEN_PREFIX + token);
