@@ -1,0 +1,26 @@
+
+TODO: ileriki zamanlarda dene
+
+If you do not store JWT in database, so that you can delete it later, you cannot really invalidate JWT token until it expires itself.
+
+If you need to invalidate JWT token before it expires itself you could try following:
+
+1. Store the JWT in a database and then when user logs out, delete the token from database.
+Storing token in a database will help you check at the time when user sends a request(for example to get user details)
+
+  - Check if provided token is valid
+
+  - Check if provided token matches the one stored in a database and if not, reject the request.
+
+Since in this video course we create a STATELESS application then storing token in a database table is a preferable approach.
+
+2. If your API is NOT stateless and you do use SESSION ID,
+then you can make session id as part of your JWT token when user successfully logs in.
+Then when user logs out, you invalidate the SESSION which will destroy it and then
+when the next time user logs in a NEW session id will be generated and will be added to a new JWT token.
+So in this case when user sends a request to get User Details, you check:
+
+-  Check if provided token is valid
+
+- Check if the SESSION ID value stored in JWT token, matches the SESSION ID of the current Request.
+And if SESSION ID values do not match, you reject the request.
