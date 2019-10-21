@@ -33,8 +33,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String token = jwtProvider.resolveToken(request);
 
         if (StringUtils.hasText(token)) {
-
-            try {
+            // logic 1
+            /* try {
                 String email = (String) jwtProvider.getSpecificClaimFromJWT(token, JwtClaimKey.USER_EMAIL);
                 UserDetails userDetails = userService.loadUserByUsername(email);
 
@@ -48,6 +48,26 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             } catch (JwtException ex) {
                 logger.error("Exception with this token: " + token + " Exception is ->" + ex.getMessage());
+            }*/
+
+            // logic 2
+            String email = null;
+            try {
+                email = (String) jwtProvider.getSpecificClaimFromJWT(token, JwtClaimKey.USER_EMAIL);
+            } catch (JwtException ex) {
+                logger.error("Exception with this token: " + token + " Exception is ->" + ex.getMessage());
+            }
+
+            if (StringUtils.hasText(email)) {
+                UserDetails userDetails = userService.loadUserByUsername(email);
+                if (jwtProvider.isTokenValid(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+
+                    // added ip address and session id to authenticated user information
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
         }
         chain.doFilter(request,response);
