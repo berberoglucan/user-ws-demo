@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto getUserWithEmail(String email) {
+    public UserDto getUserByEmail(String email) {
         return (UserDto) this.getUserDtoOrUserByEmail(email, true);
     }
 
@@ -74,6 +75,15 @@ public class UserServiceImpl implements UserService {
         }
 
         return mapper.map(existUser, UserDto.class);
+    }
+
+    @Override
+    @Transactional
+    public UserDto getUserByUserId(String userId) {
+        Optional<User> userOpt = userRepository.findUserByUserId(userId);
+        // TODO: Custom Exception yaz (UserNotFoundException)
+        User user = userOpt.orElseThrow(() -> new RuntimeException("User not found with given user id: " + userId));
+        return mapper.map(user, UserDto.class);
     }
 
     /**
