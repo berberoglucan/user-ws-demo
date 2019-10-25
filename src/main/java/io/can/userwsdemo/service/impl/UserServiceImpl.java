@@ -3,14 +3,17 @@ package io.can.userwsdemo.service.impl;
 import io.can.userwsdemo.dto.UserDto;
 import io.can.userwsdemo.entity.Role;
 import io.can.userwsdemo.entity.User;
+import io.can.userwsdemo.enumeration.ErrorMessages;
 import io.can.userwsdemo.enumeration.RoleTypes;
+import io.can.userwsdemo.exception.UserServiceException;
 import io.can.userwsdemo.repository.RoleRepository;
 import io.can.userwsdemo.repository.UserRepository;
 import io.can.userwsdemo.security.UserPrincipal;
 import io.can.userwsdemo.service.UserService;
-import io.can.userwsdemo.util.GenerateStringUtil;
+import io.can.userwsdemo.util.ServiceUtil;
 import io.can.userwsdemo.mapper.ObjectModelMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private final ObjectModelMapper mapper;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final GenerateStringUtil generateStringUtil;
+    private final ServiceUtil serviceUtil;
     private final PasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -36,13 +39,12 @@ public class UserServiceImpl implements UserService {
 
         User existUser = userRepository.findUserByEmail(userDto.getEmail());
         // Throw exception if there are exists user with this email
-        // TODO: Custom exception yaz
         if (existUser != null) {
-            throw new RuntimeException("User already exists");
+            throw new UserServiceException(ErrorMessages.RECORD_ALREADY_EXISTS.withGiven(userDto.getEmail()), HttpStatus.BAD_REQUEST);
         }
 
         User newUser = mapper.map(userDto, User.class);
-        newUser.setUserId(generateStringUtil.generateUserId());
+        newUser.setUserId(serviceUtil.generateUserId());
         newUser.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         // new sign-up user has ROLE_USER
@@ -66,9 +68,8 @@ public class UserServiceImpl implements UserService {
     public Object getUserDtoOrUserByEmail(String email, boolean isUserDto) {
 
         User existUser = userRepository.findUserByEmail(email);
-        // TODO: Custom exception yaz
         if (existUser == null) {
-            throw new RuntimeException("User is not found at given email : " + email);
+            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.withGiven(email), HttpStatus.NOT_FOUND);
         }
         if (!isUserDto) {
             return existUser;
@@ -81,9 +82,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto getUserByUserId(String userId) {
         Optional<User> userOpt = userRepository.findUserByUserId(userId);
-        // TODO: Custom Exception yaz (UserNotFoundException)
-        User user = userOpt.orElseThrow(() -> new RuntimeException("User not found with given user id: " + userId));
+        User user = userOpt.orElseThrow(() -> new UserServiceException(ErrorMessages.NO_RECORD_FOUND.withGiven(userId), HttpStatus.NOT_FOUND));
         return mapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public UserDto getUserByLongId(String id) {
+        Long longId = serviceUtil.getValidNumberId(id, Long.class);
+        User foundUser = userRepository.findUserById(longId).orElseThrow(() -> new UserServiceException(ErrorMessages.NO_RECORD_FOUND.withGiven(id), HttpStatus.NOT_FOUND));
+        return mapper.map(foundUser, UserDto.class);
     }
 
     /**
