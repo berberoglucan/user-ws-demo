@@ -57,4 +57,12 @@ public class UserPrincipal implements UserDetails {
     public String getUserId() {
         return this.user.getUserId();
     }
+
+    @Override
+    public String toString() {
+       StringBuilder sb = new StringBuilder();
+       sb.append("UserId: ").append(getUserId()).append(" ");
+       sb.append("Username: ").append(getUsername());
+       return sb.toString();
+    }
 }
