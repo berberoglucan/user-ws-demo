@@ -15,7 +15,10 @@ public enum ErrorMessages {
     COULD_NOT_UPDATE_RECORD("Could not update record."),
     COULD_NOT_DELETE_RECORD("Could not delete record."),
     EMAIL_ADDRESS_NOT_VERIFIED("Email address could not be verified."),
-    INVALID_ID("Id is invalid. Like a null or not numeric etc.");
+    INVALID_ID("Id is invalid. Like a null or not numeric etc."),
+    USER_LOCKED("User is locked."),
+    USER_DISABLED("User is disabled."),
+    BAD_CREDENTIALS("Invalid username or password");
 
     @Getter
     @Setter

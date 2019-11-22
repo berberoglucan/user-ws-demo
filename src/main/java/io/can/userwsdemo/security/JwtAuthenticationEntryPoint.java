@@ -1,8 +1,5 @@
 package io.can.userwsdemo.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.can.userwsdemo.exception.ErrorResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -10,8 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override

@@ -10,7 +10,8 @@ public class UserServiceException extends ApplicationException {
 
     private static final long serialVersionUID = -4570251944002856583L;
 
-    public UserServiceException() {
+    public UserServiceException(String message) {
+        super(message);
     }
 
     public UserServiceException(String message, HttpStatus httpStatus) {

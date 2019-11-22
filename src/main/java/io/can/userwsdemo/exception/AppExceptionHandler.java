@@ -1,5 +1,6 @@
 package io.can.userwsdemo.exception;
 
+import io.can.userwsdemo.exception.response.ErrorResponse;
 import io.can.userwsdemo.security.UserPrincipal;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -70,7 +71,7 @@ public class AppExceptionHandler {
         } else {
             sb.append("Exception when trying to access this uri: ").append(uri);
         }
-        sb.append("Exception is : ").append(exc.getClass().getSimpleName()).append(" - ").append(exc.getMessage());
+        sb.append(" - Exception is : ").append(exc.getClass().getSimpleName()).append(" - ").append(exc.getMessage());
         log.error(sb.toString());
     }
 

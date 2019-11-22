@@ -1,4 +1,4 @@
-package io.can.userwsdemo.exception;
+package io.can.userwsdemo.exception.response;
 
 import lombok.Builder;
 import lombok.Getter;
