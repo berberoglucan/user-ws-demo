@@ -17,6 +17,8 @@ public class UserController {
     private final ObjectModelMapper mapper;
     private final UserService userService;
 
+    // TODO: Daha sonra role based annotation ekle metotlara erisim icin
+
     @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
         UserDto userDto = userService.getUserByUserId(userId);

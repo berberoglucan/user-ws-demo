@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+import static io.can.userwsdemo.enumeration.ErrorMessages.*;
+import static io.can.userwsdemo.enumeration.RoleTypes.*;
+
 
 @RequiredArgsConstructor
 @Service("userService")
@@ -40,7 +43,7 @@ public class UserServiceImpl implements UserService {
         User existUser = userRepository.findUserByEmail(userDto.getEmail());
         // Throw exception if there are exists user with this email
         if (existUser != null) {
-            throw new UserServiceException(ErrorMessages.RECORD_ALREADY_EXISTS.withGiven(userDto.getEmail()), HttpStatus.BAD_REQUEST);
+            throw new UserServiceException(RECORD_ALREADY_EXISTS.withGiven(userDto.getEmail()), HttpStatus.BAD_REQUEST);
         }
 
         User newUser = mapper.map(userDto, User.class);
@@ -48,9 +51,9 @@ public class UserServiceImpl implements UserService {
         newUser.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         // new sign-up user has ROLE_USER
-        Role userRole = roleRepository.findRoleByRoleName(RoleTypes.USER.getRole());
+        Role userRole = roleRepository.findRoleByRoleName(USER.getRole());
         if (userRole == null) {
-            userRole = roleRepository.save(new Role(RoleTypes.USER.getRole()));
+            userRole = roleRepository.save(new Role(USER.getRole()));
         }
         newUser.addUserRoles(userRole);
 
@@ -69,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
         User existUser = userRepository.findUserByEmail(email);
         if (existUser == null) {
-            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.withGiven(email), HttpStatus.NOT_FOUND);
+            throw new UserServiceException(NO_RECORD_FOUND.withGiven(email), HttpStatus.NOT_FOUND);
         }
         if (!isUserDto) {
             return existUser;
@@ -82,14 +85,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto getUserByUserId(String userId) {
         Optional<User> userOpt = userRepository.findUserByUserId(userId);
-        User user = userOpt.orElseThrow(() -> new UserServiceException(ErrorMessages.NO_RECORD_FOUND.withGiven(userId), HttpStatus.NOT_FOUND));
+        User user = userOpt.orElseThrow(() -> new UserServiceException(NO_RECORD_FOUND.withGiven(userId), HttpStatus.NOT_FOUND));
         return mapper.map(user, UserDto.class);
     }
 
     @Override
     public UserDto getUserByLongId(String id) {
         Long longId = serviceUtil.getValidNumberId(id, Long.class);
-        User foundUser = userRepository.findUserById(longId).orElseThrow(() -> new UserServiceException(ErrorMessages.NO_RECORD_FOUND.withGiven(id), HttpStatus.NOT_FOUND));
+        User foundUser = userRepository.findUserById(longId).orElseThrow(() -> new UserServiceException(NO_RECORD_FOUND.withGiven(id), HttpStatus.NOT_FOUND));
         return mapper.map(foundUser, UserDto.class);
     }
 

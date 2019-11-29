@@ -3,6 +3,9 @@ package io.can.userwsdemo.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ *  This class is main exception class. New exception class must extend this exception class.
+ * */
 public class ApplicationException extends RuntimeException {
 
     private static final long serialVersionUID = -6491375561367180199L;

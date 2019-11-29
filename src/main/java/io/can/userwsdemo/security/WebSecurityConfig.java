@@ -1,7 +1,5 @@
 package io.can.userwsdemo.security;
 
-import io.can.userwsdemo.ProjectConstants;
-import io.can.userwsdemo.enumeration.RoleTypes;
 import io.can.userwsdemo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static io.can.userwsdemo.ProjectConstants.*;
+import static io.can.userwsdemo.enumeration.RoleTypes.*;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -33,8 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, ProjectConstants.SIGN_UP_ENDPOINT, ProjectConstants.LOGIN_ENDPOINT).permitAll()
-                .anyRequest().hasAnyRole(RoleTypes.USER.getRole(), RoleTypes.ADMIN.getRole())
+                .antMatchers(HttpMethod.POST, SIGN_UP_ENDPOINT, LOGIN_ENDPOINT).permitAll()
+                .anyRequest().hasAnyRole(USER.getRole(), ADMIN.getRole())
                 .and()
                 //.addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtProvider))  // -> spring security default login endpoint filter
                 .addFilterBefore(new JwtAuthorizationFilter(userService, jwtProvider), UsernamePasswordAuthenticationFilter.class)

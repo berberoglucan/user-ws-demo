@@ -60,9 +60,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String toString() {
-       StringBuilder sb = new StringBuilder();
-       sb.append("UserId: ").append(getUserId()).append(" ");
-       sb.append("Username: ").append(getUsername());
-       return sb.toString();
+        return "UserId: " + getUserId() + " " +
+                "Username: " + getUsername();
     }
 }
