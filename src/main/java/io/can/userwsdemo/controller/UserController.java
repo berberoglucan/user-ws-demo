@@ -3,11 +3,14 @@ package io.can.userwsdemo.controller;
 import io.can.userwsdemo.dto.UserDto;
 import io.can.userwsdemo.service.UserService;
 import io.can.userwsdemo.mapper.ObjectModelMapper;
+import io.can.userwsdemo.ui.request.UserUpdateRequestModel;
 import io.can.userwsdemo.ui.response.UserRest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.ws.Response;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,9 +36,13 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @PutMapping
-    public String updateUser() {
-        return "update user was called";
+    @PutMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<UserRest> updateUser(@PathVariable(required = false) String userId,
+                                               @RequestBody UserUpdateRequestModel userUpdateRequestModel) {
+        UserDto userRequest = userUpdateRequestModel.toUserDto();
+        UserDto updatedUser = userService.updateUser(userId, userRequest);
+        UserRest userResponse = mapper.map(updatedUser, UserRest.class);
+        return ResponseEntity.ok(userResponse);
     }
 
     @DeleteMapping

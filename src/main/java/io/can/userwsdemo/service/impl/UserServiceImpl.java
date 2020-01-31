@@ -96,6 +96,11 @@ public class UserServiceImpl implements UserService {
         return mapper.map(foundUser, UserDto.class);
     }
 
+    @Override
+    public UserDto updateUser(String userId, UserDto userDto) {
+        return null;
+    }
+
     /**
      * This method calls by spring security
      * */

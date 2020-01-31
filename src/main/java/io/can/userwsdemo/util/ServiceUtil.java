@@ -10,6 +10,8 @@ import org.springframework.util.NumberUtils;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import static io.can.userwsdemo.enumeration.ErrorMessages.*;
+
 @Component
 public class ServiceUtil {
 
@@ -42,7 +44,7 @@ public class ServiceUtil {
     public <T extends Number> T getValidNumberId(String id, Class<T> type0fNumber) {
         String trimmedId = id.trim();
         if (!StringUtils.isNumeric(trimmedId)) {
-            throw new ApplicationException(ErrorMessages.INVALID_ID.withGiven(trimmedId), HttpStatus.BAD_REQUEST);
+            throw new ApplicationException(INVALID_ID.withGiven(trimmedId), HttpStatus.BAD_REQUEST);
         }
         return NumberUtils.parseNumber(trimmedId, type0fNumber);
     }
