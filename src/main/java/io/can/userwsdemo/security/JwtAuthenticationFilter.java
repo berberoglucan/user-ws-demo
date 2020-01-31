@@ -18,6 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ *
+ * This class not using now. Just example
+ * */
+@Deprecated
 @RequiredArgsConstructor
 // do not this class spring bean and this class not in spring context
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {

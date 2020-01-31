@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class UserDto implements Serializable {
 

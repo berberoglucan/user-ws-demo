@@ -11,12 +11,18 @@ import java.io.IOException;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        // TODO: Ozel error response yazip geriye gonder
+
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized deneme");
 
-        /*HttpStatus unauthorized = HttpStatus.UNAUTHORIZED;
-        JwtErrorResponse errorResponse = new JwtErrorResponse(ex.getMessage(),
-                unauthorized.getReasonPhrase() + "-" + unauthorized.value());
+        /* HttpStatus unauthorized = HttpStatus.UNAUTHORIZED;
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .exceptionType(authException.getClass().getSimpleName())
+                .message(authException.getMessage() + " " + request.getRequestURI())
+                .httpStatus(unauthorized.toString())
+                .timeStamp(ZonedDateTime.now(ZoneId.of("UTC")))
+                .build();
+
         response.setContentType("application/json");
         response.setStatus(unauthorized.value());
         response.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse)); */

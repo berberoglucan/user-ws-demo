@@ -64,7 +64,7 @@ public class JwtProviderImpl implements JwtProvider {
         return (String) this.getSpecificClaimFromJWT(token, JwtClaimKey.USER_ID);
     }
 
-    // Bu method baska yerlerde veya projelerde kullanilabilir
+    // TODO: User Id'ye gore ekstra validasyon eklenebilir. UserPrincipal alan ozel method yazmak gerekebilir. Hatta db islemleri provider icerisinde soyutlanabilir
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String userMail = (String) getSpecificClaimFromJWT(token, JwtClaimKey.USER_EMAIL);
         return userMail.equals(userDetails.getUsername()) && !isTokenExpired(token);
